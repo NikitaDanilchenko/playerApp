@@ -6,66 +6,53 @@ export const playerMachine = setup({
     types: {
         context: {} as VideoPlayerContext,
         events: {} as VideoPlayerEvent
-      },
-      actions: {
-        togglePlayPause: assign(({context, event}) => ({
-          saveTime: event.type === 'TOGGLE_PLAY_PAUSE' ?  event.time : context.saveTime,
+    },
+    actions: {
+        togglePlayPause: assign(({ context }) => ({
             isPlaying: !context.isPlaying
         })),
         initializePlayer: assign({
-          isInitialized: () => {
-            return true;
-          },
+            isInitialized: true,
         }),
-        closePlayer: assign(({context, event}) => ({
-          saveTime: event.type === 'CLOSE' ? event.time : context.saveTime,
-          isPlaying: !context.isPlaying
+        stopPlaying: assign(() => ({
+            isPlaying: false
+        })),
+        startPlaying: assign(() => ({
+            isPlaying: true
         }))
-      },
+    },
 }).createMachine({
     id: "Player",
     initial: "closed",
     context: {
         isPlaying: false,
         isInitialized: false,
-        saveTime: 0
     },
     states: {
         closed: {
-          on: {
-            OPEN_MINI: "mini",
-            OPEN_FULL: "full",
-          },
+            entry: 'startPlaying',
+            on: {
+                OPEN_MINI: "mini",
+                OPEN_FULL: "full",
+            },
         },
         mini: {
-          on: {
-            CLOSE: {
-              target: "closed",
-              actions: 'closePlayer'
+            on: {
+                CLOSE: {target: "closed"},
+                STOP_PLAYING: {actions: 'stopPlaying'},
+                OPEN_FULL: {target: "full", actions: 'startPlaying'},
+                TOGGLE_PLAY_PAUSE: {actions: "togglePlayPause"},
+                INIT_PLAYER: {actions: "initializePlayer"},
             },
-            OPEN_FULL: "full",
-            TOGGLE_PLAY_PAUSE: { 
-                actions: "togglePlayPause" 
-            },
-            INIT_PLAYER: { 
-                actions: "initializePlayer" 
-            },
-          },
         },
         full: {
-          on: {
-            CLOSE: {
-              target: "closed",
-              actions: 'closePlayer'
+            on: {
+                CLOSE: {target: "closed"},
+                STOP_PLAYING: {actions: 'stopPlaying'},
+                OPEN_MINI: {target: "mini", actions: 'startPlaying'},
+                TOGGLE_PLAY_PAUSE: {actions: "togglePlayPause"},
+                INIT_PLAYER: {actions: "initializePlayer"},
             },
-            OPEN_MINI: "mini",
-            TOGGLE_PLAY_PAUSE: { 
-                actions: "togglePlayPause" 
-            },
-            INIT_PLAYER: { 
-                actions: "initializePlayer" 
-            },
-          },
         },
-      },
+    },
 })
