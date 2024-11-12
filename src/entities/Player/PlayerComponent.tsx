@@ -1,7 +1,7 @@
 import { Button, Modal } from "antd"
 import styles from '../Player/style.module.css'
 import { useMachine } from "@xstate/react"
-import { playerMachine } from "./PlayerMachine"
+import { playerMachine } from "./playerMachine"
 import { ArrowsAltOutlined, PauseOutlined, PlayCircleOutlined, ShrinkOutlined } from "@ant-design/icons"
 import ReactPlayer from "react-player"
 import { useRef } from "react"
