@@ -15,7 +15,7 @@ export const playerMachine = setup({
             isInitialized: true,
         }),
         stopPlaying: assign(() => ({
-            isPlaying: false
+                isPlaying: false
         })),
         startPlaying: assign(() => ({
             isPlaying: true
@@ -30,7 +30,7 @@ export const playerMachine = setup({
     },
     states: {
         closed: {
-            entry: 'startPlaying',
+            entry: 'stopPlaying',
             on: {
                 OPEN_MINI: "mini",
                 OPEN_FULL: "full",

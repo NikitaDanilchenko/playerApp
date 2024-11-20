@@ -24,13 +24,14 @@ export const PlayerComponent = () => {
 
     const closePlayer = () => {
         send({ type: 'STOP_PLAYING' });
-        send({ type: 'CLOSE' });
+        setTimeout(() => send({ type: 'CLOSE' }), 0);
     }
     const openPlayer = (mode: 'full' | 'mini') => {
         send({ type: mode === 'full' ? 'OPEN_FULL' : 'OPEN_MINI' });
         if (!snapshot.context.isInitialized) {
             send({ type: 'INIT_PLAYER' });
         }
+        send({ type: 'TOGGLE_PLAY_PAUSE' })
     }
     return (
         <div className={styles.modal_wrapper}>
